@@ -33,6 +33,39 @@
     <link href="css/custom.css" rel="stylesheet">
 
     <script src="js/respond.min.js"></script>
+    <!-- FireBase -->
+    <script src="https://www.gstatic.com/firebasejs/4.3.1/firebase.js"></script>
+    <script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyD8sdRfOVnghYY73jFqtvSbRXAcuE_bkWQ",
+    authDomain: "obaju-37cfd.firebaseapp.com",
+    databaseURL: "https://obaju-37cfd.firebaseio.com",
+    projectId: "obaju-37cfd",
+    storageBucket: "obaju-37cfd.appspot.com",
+    messagingSenderId: "652382473710"
+  };
+  firebase.initializeApp(config);
+  firebase.auth().onAuthStateChanged(function(user) {
+  if (user) {
+    // User is signed in.
+    var displayName = user.displayName;
+    var email = user.email;
+    var emailVerified = user.emailVerified;
+    var photoURL = user.photoURL;
+    var isAnonymous = user.isAnonymous;
+    var uid = user.uid;
+    var providerData = user.providerData;
+    // ...
+    alert(displayName);
+    writeuserdata(user);
+  } else {
+    // User is signed out.
+    // ...
+  }
+});
+</script>
+    <script src="./js/obaju.js"></script>
 
     <link rel="shortcut icon" href="favicon.png">
 
@@ -441,6 +474,10 @@
                             </div>
                             <div class="text-center">
                                 <button type="submit" class="btn btn-primary"><i class="fa fa-user-md"></i> Register</button>
+                            </div>
+                            <hr>
+                            <div class="text-center">
+                                <button type="button" class="btn btn-primary" onclick="googleLogin()"><i class="fa fa-google-plus"></i> Or use Google id</button>
                             </div>
                         </form>
                     </div>

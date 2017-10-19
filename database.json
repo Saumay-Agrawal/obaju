@@ -1,0 +1,54 @@
+{
+    "users" : [
+        {
+            "id" : "user#1",
+            "name" : {
+                "first" : "Saumay",
+                "last" : "Agrawal"
+            },
+            "gender" : "male",
+            "address" : {
+                "street" : "5/726 Viram Khand",
+                "city" : "Lucknow",
+                "state" : "Uttar Pradesh",
+                "country" : "India",
+                "zip" : 226010
+            },
+            "contact" : {
+                "email" : ["saumay.agrawal@gmail.com", "saumay.agrawal2016@vitstudent.ac.in"],
+                "telephone" : [7550170527, 9984290084]
+            },
+            "wishlist" : ["prod#1", "prod#2"],
+            "orders" : ["order#1", "order#2"]
+        }
+    ],
+    "products" : [
+        {
+            "id" : "prod#1",
+            "name" : "armani blouse",
+            "price" : {
+                "mrp" : 500,
+                "discount" : 10
+            },
+            "images" : ["link1", "link2", "link3"],
+            "details" : ["This is a great blouse", "A must buy."],
+            "material" : ["material1", "material2"],
+            "size&fit" : ["regular fit", "The model"],
+            "comments" : "NO comments"
+        }
+    ],
+    "orders" : [
+        {
+            "id" : "Order#1",
+            "userid" : "user#1",
+            "date" : "22/12/22",
+            "items" : ["prod#1", "prod#2"],
+            "quantity" : [2,4],
+            "subtotal" : 5000,
+            "shipping" : 10,
+            "tax" : 50,
+            "total" : 5060,
+            "status" : "being prepared"
+        }
+    ]
+}
