@@ -35,20 +35,13 @@
     <script src="js/respond.min.js"></script>
     <!-- FireBase -->
     <script src="https://www.gstatic.com/firebasejs/4.3.1/firebase.js"></script>
+    <script src="./js/obaju.js"></script>
     <script>
-  // Initialize Firebase
-  var config = {
-    apiKey: "AIzaSyD8sdRfOVnghYY73jFqtvSbRXAcuE_bkWQ",
-    authDomain: "obaju-37cfd.firebaseapp.com",
-    databaseURL: "https://obaju-37cfd.firebaseio.com",
-    projectId: "obaju-37cfd",
-    storageBucket: "obaju-37cfd.appspot.com",
-    messagingSenderId: "652382473710"
-  };
-  firebase.initializeApp(config);
-  firebase.auth().onAuthStateChanged(function(user) {
+    firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
     // User is signed in.
+    if(localStorage.method=="google")
+  {
     var displayName = user.displayName;
     var email = user.email;
     var emailVerified = user.emailVerified;
@@ -57,15 +50,27 @@
     var uid = user.uid;
     var providerData = user.providerData;
     // ...
-    alert(displayName);
-    writeuserdata(user);
-  } else {
+	}
+	else{
+		user.updateProfile({
+  displayName: localStorage.name
+}).then(function() {
+}, function(error) {
+  // An error happened.
+});
+	}
+	alert("inside");
+    alert(user.displayName);
+  }
+ else {
     // User is signed out.
     // ...
   }
+  writeuserdata(user);
 });
+  
+
 </script>
-    <script src="./js/obaju.js"></script>
 
     <link rel="shortcut icon" href="favicon.png">
 
@@ -473,7 +478,7 @@
                                 <input type="password" class="form-control" id="password">
                             </div>
                             <div class="text-center">
-                                <button type="submit" class="btn btn-primary"><i class="fa fa-user-md"></i> Register</button>
+                                <button type="button" class="btn btn-primary" onclick="register()"><i class="fa fa-user-md"></i> Register</button>
                             </div>
                             <hr>
                             <div class="text-center">
@@ -493,7 +498,7 @@
 
                         <hr>
 
-                        <form action="customer-orders.html" method="post">
+                        <form method="post">
                             <div class="form-group">
                                 <label for="email">Email</label>
                                 <input type="text" class="form-control" id="email">
@@ -503,7 +508,7 @@
                                 <input type="password" class="form-control" id="password">
                             </div>
                             <div class="text-center">
-                                <button type="submit" class="btn btn-primary"><i class="fa fa-sign-in"></i> Log in</button>
+                                <button type="button" class="btn btn-primary" onclick="login()"><i class="fa fa-sign-in"></i> Log in</button>
                             </div>
                         </form>
                     </div>

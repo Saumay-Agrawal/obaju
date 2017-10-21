@@ -1,3 +1,13 @@
+var config = {
+    apiKey: "AIzaSyD8sdRfOVnghYY73jFqtvSbRXAcuE_bkWQ",
+    authDomain: "obaju-37cfd.firebaseapp.com",
+    databaseURL: "https://obaju-37cfd.firebaseio.com",
+    projectId: "obaju-37cfd",
+    storageBucket: "obaju-37cfd.appspot.com",
+    messagingSenderId: "652382473710"
+  };
+  firebase.initializeApp(config);
+
 var databaseURL=firebase.database();
 function validateEmail(email) {
 	var atpos = email.indexOf("@");
@@ -8,9 +18,59 @@ function validateEmail(email) {
     }
     return true;
 }
+function register()
+{	var email=document.getElementById("email").value;
+	var password=document.getElementById("password").value;
+	var name=document.getElementById("name").value;
+	localStorage.name=name;
+	alert(email);
+	firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
+  // Handle Errors here.
+  var errorCode = error.code;
+  var errorMessage = error.message;
+  // ...
+  alert(errorMessage);
+});
+	localStorage.method="email";
 
+}
+function login()
+{
+	var email=document.getElementById("email").value;
+	var password=document.getElementById("password").value;
+	firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+  // Handle Errors here.
+  var errorCode = error.code;
+  var errorMessage = error.message;
+  alert(errorMessage);
+  // ...
+});
+	alert("logged in!!");
+	 firebase.auth().onAuthStateChanged(function(user) {
+  if (user) {
+  		alert(user.displayName);
+  }
+});
+}
+function login_modal()
+{	var email=document.getElementById("email-modal").value;
+	var password=document.getElementById("password-modal").value;
+	firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+  // Handle Errors here.
+  var errorCode = error.code;
+  var errorMessage = error.message;
+  alert(errorMessage);
+  // ...
+});
+	alert("logged in!!");
+	 firebase.auth().onAuthStateChanged(function(user) {
+  if (user) {
+  		alert(user.displayName);
+  }
+});
+}
 function subscribe()
-{ var email=document.findElementById("subsemail");
+{ var email=document.getElementById("subsemail").value;
 	if(validateEmail(email))
 	{
 
@@ -27,8 +87,7 @@ function googleLogin()
 		{		
 		}
 		alert("logged in!!");
-			var user=result.user;
-			writeuserdata(user);
+		localStorage.method="google";
 		
 	}).catch(function(error){
 		var errorCode=error.code;
@@ -42,8 +101,9 @@ function googleLogin()
 
 
 function writeuserdata(user)
-{	alert(user.displayName);
-	databaseURL.ref("users/test").set({
+{	alert("writedata!!");
+	alert(user.displayName);
+	databaseURL.ref("users/"+user.uid).set({
 		name:user.displayName
 	});
 }
