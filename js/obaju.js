@@ -37,6 +37,7 @@ function register() {
 		alert(errorMessage);
 	});
 	localStorage.method="email";
+	localStorage.welcome=0;
 }
 
 function login() {
@@ -50,6 +51,8 @@ function login() {
   		alert(errorMessage);
   		// ...
 	});
+
+	localStorage.welcome=0;
 	//alert("logged in!!");
 }
 
@@ -63,6 +66,7 @@ function login_modal() {
 		alert(errorMessage);
 		// ...
 	});
+	localStorage.welcome=0;
 }
 
 firebase.auth().onAuthStateChanged(function(user) {
@@ -77,11 +81,14 @@ firebase.auth().onAuthStateChanged(function(user) {
                 var uid = user.uid;
                 var providerData = user.providerData;
                 // ...
-                alert(user.displayName);
+                if(localStorage.welcome==0) {
+                	alert("Welcome "+user.displayName);
+                	localStorage.welcome=1;	
+                }
                 usersRef=databaseURL.ref("users");
         		usersRef.once('value', function(snapshot) {
   				if (snapshot.hasChild(user.uid)) {
-    				alert('exists');
+    				//alert('exists');
 					}
 				else {
 					writeuserdata(user);
@@ -96,11 +103,15 @@ firebase.auth().onAuthStateChanged(function(user) {
                 	}, function(error) {
         	    // An error happened.
                 	});
-            	alert(user.displayName);
+            	
+                if(localStorage.welcome==0) {
+                	alert("Welcome "+user.displayName);
+                	localStorage.welcome=1;	
+                }
             	usersRef=databaseURL.ref("users");
         		usersRef.once('value', function(snapshot) {
   					if (snapshot.hasChild(user.uid)) {
-    					alert('exists');
+    					//alert('exists');
 						}
 					else {
 						writeuserdata(user);
@@ -111,7 +122,7 @@ firebase.auth().onAuthStateChanged(function(user) {
 		}
     else {
         // User is signed out.
-        alert("logged out!!");
+        ///alert("logged out!!");
         // ...
           }
 });
@@ -119,12 +130,13 @@ firebase.auth().onAuthStateChanged(function(user) {
 function logout() {
 	firebase.auth().signOut().then(
 		function() {
-		//alert("logged out!!");
+		alert("logged out!!");
 		},
 		function(error) {
 			console.error('Sign Out Error', error);
 		}
 	);
+
 }
 
 function subscribe() {
