@@ -10,7 +10,7 @@ var config = {
 firebase.initializeApp(config);
 
 var databaseURL=firebase.database();
-
+var USER;
 
 function validateEmail(email) {
 	var atpos = email.indexOf("@");
@@ -68,6 +68,7 @@ function login_modal() {
 firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
         // User is signed in.
+        USER=user;
         if(localStorage.method=="google") {
                 var displayName = user.displayName;
                 var email = user.email;
@@ -81,7 +82,7 @@ firebase.auth().onAuthStateChanged(function(user) {
                 usersRef=databaseURL.ref("users");
         		usersRef.once('value', function(snapshot) {
   				if (snapshot.hasChild(user.uid)) {
-    				alert('exists');
+    				//alert('exists');
 					}
 				else {
 					writeuserdata(user);
@@ -100,7 +101,7 @@ firebase.auth().onAuthStateChanged(function(user) {
             	usersRef=databaseURL.ref("users");
         		usersRef.once('value', function(snapshot) {
   					if (snapshot.hasChild(user.uid)) {
-    					alert('exists');
+    					//alert('exists');
 						}
 					else {
 						writeuserdata(user);
@@ -111,7 +112,6 @@ firebase.auth().onAuthStateChanged(function(user) {
 		}
     else {
         // User is signed out.
-        alert("logged out!!");
         // ...
           }
 });
@@ -125,6 +125,7 @@ function logout() {
 			console.error('Sign Out Error', error);
 		}
 	);
+	alert("logged out!!");
 }
 
 function subscribe() {
@@ -152,9 +153,32 @@ function googleLogin() {
 }
 
 function writeuserdata(user) {
-	alert("writedata!!");
+	//alert("writedata!!");
 	alert(user.displayName);
 	databaseURL.ref("users/"+user.uid).set({
 		name:user.displayName
 	});
+}
+
+function wishlist(prodid,user) {
+
+	prodRef=databaseURL.ref("products");
+	wishlistRef=databaseURL.ref("users/"+user.uid+"/wishlist");
+    wishlistRef.once('value', function(snapshot) {
+  		if (snapshot.hasChild(prodid)) {
+  			wishlistRef.child(prodid).remove();
+  			alert("Removed from wishlist");
+    
+			}
+		else {
+				prodRef.child(prodid+"/name").on("value",function(snapshot){
+   				databaseURL.ref("users/"+user.uid+"/wishlist").set({
+					[prodid]:snapshot.val()
+					});
+				});
+				alert("Added to wishlist");
+			}
+		});
+
+    
 }
