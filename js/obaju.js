@@ -22,7 +22,6 @@ function validateEmail(email) {
     return true;
 }
 
-
 function register() {
 	var email=document.getElementById("email").value;
 	var password=document.getElementById("password").value;
@@ -168,7 +167,7 @@ function wishlist(prodid,user) {
   		if (snapshot.hasChild(prodid)) {
   			wishlistRef.child(prodid).remove();
   			alert("Removed from wishlist");
-    
+
 			}
 		else {
 				prodRef.child(prodid+"/name").on("value",function(snapshot){
@@ -180,5 +179,13 @@ function wishlist(prodid,user) {
 			}
 		});
 
+
+}
+
+function addToCart(prodid) {
+	cartRef=databaseURL.ref("users/"+user.uid+"/cart");
+	cartRef.set({
+		[prodid]:1
+	});
     
 }
