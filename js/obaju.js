@@ -7,10 +7,12 @@ var config = {
     messagingSenderId: "652382473710"
 	};
 
-firebase.initializeApp(config);
+  firebase.initializeApp(config);
 
 var databaseURL=firebase.database();
+
 var USER;
+var cartrow=0,oCell;
 
 function validateEmail(email) {
 	var atpos = email.indexOf("@");
@@ -22,12 +24,13 @@ function validateEmail(email) {
     return true;
 }
 
+
 function register() {
 	var email=document.getElementById("email").value;
 	var password=document.getElementById("password").value;
 	var name=document.getElementById("name").value;
 	localStorage.name=name;
-	alert(email);
+	//alert(email);
 	firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
   // Handle Errors here.
 		var errorCode = error.code;
@@ -40,7 +43,7 @@ function register() {
 
 function login() {
 	var email=document.getElementById("emaillogin").value;
-	alert(email);
+	//alert(email);
 	var password=document.getElementById("passwordlogin").value;
 	firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
   		// Handle Errors here.
@@ -67,7 +70,9 @@ function login_modal() {
 firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
         // User is signed in.
+		alert(user.displayName);
         USER=user;
+		localStorage.user=user;
         if(localStorage.method=="google") {
                 var displayName = user.displayName;
                 var email = user.email;
@@ -77,7 +82,7 @@ firebase.auth().onAuthStateChanged(function(user) {
                 var uid = user.uid;
                 var providerData = user.providerData;
                 // ...
-                alert(user.displayName);
+                // alert(user.displayName);
                 usersRef=databaseURL.ref("users");
         		usersRef.once('value', function(snapshot) {
   				if (snapshot.hasChild(user.uid)) {
@@ -153,7 +158,7 @@ function googleLogin() {
 
 function writeuserdata(user) {
 	//alert("writedata!!");
-	alert(user.displayName);
+	//alert(user.displayName);
 	databaseURL.ref("users/"+user.uid).set({
 		name:user.displayName
 	});
@@ -167,7 +172,7 @@ function wishlist(prodid,user) {
   		if (snapshot.hasChild(prodid)) {
   			wishlistRef.child(prodid).remove();
   			alert("Removed from wishlist");
-
+    
 			}
 		else {
 				prodRef.child(prodid+"/name").on("value",function(snapshot){
@@ -179,13 +184,57 @@ function wishlist(prodid,user) {
 			}
 		});
 
-
-}
-
-function addToCart(prodid) {
-	cartRef=databaseURL.ref("users/"+user.uid+"/cart");
-	cartRef.set({
-		[prodid]:1
-	});
     
 }
+function abc(prodid,user,name,cost){
+	var cartRef=databaseURL.ref("users/"+user.uid+"/cart/"+prodid);
+	cartRef.set({
+				"qty":1,
+				"cost":cost,
+				"name":name,
+				"discount":0
+	});
+}
+
+function fetchCart(user)
+{	//alert("fetching");
+	var prodid,qty,name="abc",cost,total=0.00,cartrow=0;
+	document.getElementById("cart").innerHTML="";
+	var cartRef=databaseURL.ref("users/"+user.uid+"/cart");
+	cartRef.once("value").then(function(snapshot) {
+    if(!snapshot.exists())
+		{
+			document.getElementById("cart").innerHTML="no item in cart";
+			document.getElementById("final_total").innerHTML="";
+		}
+	});
+	cartRef.on("child_added",function(snapshot){
+		//alert(snapshot);
+		prodid=snapshot.key;
+		qty=snapshot.child("qty").val();
+		name=snapshot.child("name").val();
+		cost=snapshot.child("cost").val();
+		total+=cost;
+		var newRow = document.all("cart").insertRow(cartrow++);
+    var oCell = newRow.insertCell();
+    oCell.innerHTML = "<a href='#''>"+name+"</a>";
+    
+    oCell = newRow.insertCell();
+    oCell.innerHTML = "<input type='number' value='"+qty+"' class='form-control'>";
+    
+    oCell = newRow.insertCell();
+    oCell.innerHTML = "&#x20b9;"+cost; 
+	
+    oCell = newRow.insertCell();
+    oCell.innerHTML = "0.00";
+
+    oCell = newRow.insertCell();
+    oCell.innerHTML = "&#x20b9;"+qty*cost;
+
+    oCell = newRow.insertCell();
+    oCell.innerHTML = "<a href='#'' id='"+prodid+"' onclick='removerow(this,id)'><i class='fa fa-trash-o'></i></a>";
+    document.getElementById("final_total").innerHTML="&#x20b9;"+total;
+	});
+	
+}
+
