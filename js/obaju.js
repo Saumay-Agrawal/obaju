@@ -233,7 +233,16 @@ function fetchCart(user)
 
     oCell = newRow.insertCell();
     oCell.innerHTML = "<a href='#'' id='"+prodid+"' onclick='removerow(this,id)'><i class='fa fa-trash-o'></i></a>";
-    document.getElementById("final_total").innerHTML="&#x20b9;"+total;
+	document.getElementById("final_total").innerHTML="&#x20b9;"+total;
+	
+	var shipping = 50;
+	var tax = 0.1*total;
+	
+	document.getElementById("subtotal").innerHTML = "&#x20b9;" + total;
+	document.getElementById("shipping").innerHTML = "&#x20b9;" + shipping;
+	document.getElementById("tax").innerHTML = "&#x20b9;" + tax;
+	document.getElementById("total").innerHTML = "&#x20b9;" + (total+shipping+tax);
+	
 	});
 	
 }
