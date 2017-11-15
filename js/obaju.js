@@ -70,7 +70,7 @@ function login_modal() {
 firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
         // User is signed in.
-		alert(user.displayName);
+		alert("Session User: " + user.displayName);
         USER=user;
 		localStorage.user=user;
         if(localStorage.method=="google") {
@@ -194,6 +194,7 @@ function abc(prodid,user,name,cost){
 				"name":name,
 				"discount":0
 	});
+	alert(name + " has been added to cart.");
 }
 
 function fetchCart(user)
